@@ -1,6 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
+Project("{D47ECC67-E29D-7A8A-92D3-EFCD5421BCDB}") = "Tea-Cheerios", "Assembly-CSharp-firstpass-vs.csproj", "{3B974898-8D33-A570-935A-91AEE8E6C026}"
+EndProject
 Project("{D47ECC67-E29D-7A8A-92D3-EFCD5421BCDB}") = "Tea-Cheerios", "Assembly-CSharp-vs.csproj", "{44EDB991-DD67-C9B7-CF10-9C02A7CBA0D1}"
 EndProject
 Project("{D47ECC67-E29D-7A8A-92D3-EFCD5421BCDB}") = "Tea-Cheerios", "Assembly-CSharp-Editor-vs.csproj", "{6296AD78-05EE-0271-8C03-5BA0D6CF9511}"
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B974898-8D33-A570-935A-91AEE8E6C026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B974898-8D33-A570-935A-91AEE8E6C026}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B974898-8D33-A570-935A-91AEE8E6C026}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B974898-8D33-A570-935A-91AEE8E6C026}.Release|Any CPU.Build.0 = Release|Any CPU
 		{44EDB991-DD67-C9B7-CF10-9C02A7CBA0D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{44EDB991-DD67-C9B7-CF10-9C02A7CBA0D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44EDB991-DD67-C9B7-CF10-9C02A7CBA0D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -23,7 +29,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-			GlobalSection(MonoDevelopProperties) = preSolution
+									GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
