@@ -20,8 +20,8 @@ namespace AssemblyCSharp
 		int totalCount;
 		float netWorth;
 		float percentDiff;
-		public Slider BitcoinSlider;
-		public Slider UsdSlider;
+		public Slider BitcoinSlider = GameObject.Find("BitcoinSlider").GetComponent<Slider>();
+		public Slider UsdSlider= GameObject.Find("UsdSlider").GetComponent<Slider>();
 		public HistoryMode()
 		{
 			List<PlottedData> tempList;
@@ -76,11 +76,12 @@ namespace AssemblyCSharp
 			percentDiff = 0;
 			// Update size
 			// Update display
-			var go = GameObject.Find ("BitcoinSlider").GetComponent<Slider>();
-			go.value = 1 - (w.Usd / netWorth);
-			var go2 = GameObject.Find("UsdSlider").GetComponent<Slider>();
-			go2.value= w.Usd / netWorth;
-		}
+			BitcoinSlider.value = 1 - (w.Usd / netWorth);
+			UsdSlider.value= w.Usd / netWorth;
+			Vector3 scale = BitcoinSlider.transform.localPosition;
+			scale.x = 5F;
+			scale.y = 5f;
+			BitcoinSlider.transform.localScale = scale;}
 		public float Price()
 		{
 			return btcHistory[counter];
