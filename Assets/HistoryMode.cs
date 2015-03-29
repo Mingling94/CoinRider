@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using UnityEngine.UI;
 namespace AssemblyCSharp
 {
 	class HistoryMode
@@ -18,7 +19,8 @@ namespace AssemblyCSharp
 		int totalCount;
 		float netWorth;
 		float percentDiff;
-		
+		public Slider BitcoinSlider;
+		public Slider UsdSlider;
 		public HistoryMode()
 		{
 			List<PlottedData> tempList;
@@ -41,7 +43,7 @@ namespace AssemblyCSharp
 			netWorth = 100;
 			currentPrice = btcHistory [0];
 			percentDiff = 0;
-			
+
 			// Update display
 		}
 		
@@ -73,6 +75,8 @@ namespace AssemblyCSharp
 			percentDiff = 0;
 			// Update size
 			// Update display
+			BitcoinSlider.value = 1-(w.Usd / netWorth);
+			UsdSlider.value = w.Usd / netWorth;
 		}
 		public float Price()
 		{
