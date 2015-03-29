@@ -40,8 +40,8 @@ class Program
         //price = newCombo.Value
     }
 }
-class PlottedData
-{
-    public string time {get;set;}
-    public string price {get;set;}
-}
+//class PlottedData
+//{
+  //  public string time {get;set;}
+  //  public string price {get;set;}
+//}

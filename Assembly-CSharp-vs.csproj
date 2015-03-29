@@ -46,6 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\GameWallet.cs" />
+     <Compile Include="Assets\HistoryMode.cs" />
      <Compile Include="Assets\JSONPriceMethods.cs" />
      <Compile Include="Assets\Line.cs" />
      <Compile Include="Assets\MenuControl.cs" />
