@@ -20,6 +20,10 @@ public class WalletCreate : MonoBehaviour {
 	private string strEmail;
 	private string strPassword;
 
+	public string btcAddress;
+	public string[] m;
+
+
 	// Use this for initialization
 	void Start () {
 
@@ -28,20 +32,19 @@ public class WalletCreate : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
 	}
 
 	void SendMessage(string word){
-	//	Application.LoadLevel (word);
+	
+		Application.LoadLevel (word);
 		strEmail = email.text;
 		strPassword = password.text;
 		string url = "https://blockchain.info/api/v2/create_wallet?email=" + 
 			strEmail + "&password=" + strPassword + 
 			"&api_code=82d78766-eae4-4aa2-914e-95ad9931d242";
 
-		string[] stringSeparators = new string[] {"address\":\""};
-		string[] stringSeparators2 = new string[] {"\",\"link"};
-		string[] m;
+		 string[] stringSeparators = new string[] {"address\":\""};
+		 string[] stringSeparators2 = new string[] {"\",\"link"};
 
 		WebRequest request = WebRequest.Create (url);
 		WebResponse response = request.GetResponse ();
@@ -57,11 +60,16 @@ public class WalletCreate : MonoBehaviour {
 		m =  responseFromServer.Split (stringSeparators, StringSplitOptions.RemoveEmptyEntries);
 		m = m[1].Split (stringSeparators2, StringSplitOptions.RemoveEmptyEntries);
 
-		Debug.Log (m[0]);
+		btcAddress =  m[0].ToString();
 
-
+		
+		
+		Debug.Log (btcAddress);
 		reader.Close ();
 		response.Close ();
+
+
+	
 	}
 
 }

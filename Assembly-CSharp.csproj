@@ -54,6 +54,7 @@
      <Compile Include="Assets\Roll.cs" />
      <Compile Include="Assets\SmoothFollowCamera2D.cs" />
      <Compile Include="Assets\WalletCreate.cs" />
+     <Compile Include="Assets\btcAddress.cs" />
      <Compile Include="Assets\toBlockChain.cs" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
      <None Include="Assets\Newtonsoft.Json.xml" />
