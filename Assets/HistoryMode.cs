@@ -6,6 +6,7 @@ using System.Net;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using UnityEngine.UI;
+using UnityEngine;
 namespace AssemblyCSharp
 {
 	class HistoryMode
@@ -75,8 +76,10 @@ namespace AssemblyCSharp
 			percentDiff = 0;
 			// Update size
 			// Update display
-			BitcoinSlider.value = 1-(w.Usd / netWorth);
-			UsdSlider.value = w.Usd / netWorth;
+			var go = GameObject.Find ("BitcoinSlider").GetComponent<Slider>();
+			go.value = 1 - (w.Usd / netWorth);
+			var go2 = GameObject.Find("UsdSlider").GetComponent<Slider>();
+			go2.value= w.Usd / netWorth;
 		}
 		public float Price()
 		{
