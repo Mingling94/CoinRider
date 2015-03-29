@@ -19,9 +19,10 @@ namespace AssemblyCSharp
 		int counter;
 		int totalCount;
 		float netWorth;
-		float percentDiff;
+		float scaleDiff;
+		public GameObject Coin = GameObject.Find("Coin");
 		public Slider BitcoinSlider = GameObject.Find("BitcoinSlider").GetComponent<Slider>();
-		public Slider UsdSlider= GameObject.Find("UsdSlider").GetComponent<Slider>();
+		public Slider MoneySlider= GameObject.Find("MoneySlider").GetComponent<Slider>();
 		public HistoryMode()
 		{
 			List<PlottedData> tempList;
@@ -42,10 +43,8 @@ namespace AssemblyCSharp
 			counter = 0;
 			w = new GameWallet (100);
 			netWorth = 100;
+			scaleDiff = 0;
 			currentPrice = btcHistory [0];
-			percentDiff = 0;
-
-			// Update display
 		}
 		
 		public IEnumerable<PlottedData> getTimePrices(String start, String end, List<PlottedData> history)
@@ -73,15 +72,13 @@ namespace AssemblyCSharp
 			counter++;
 			currentPrice = Price();
 			netWorth = NetWorth();
-			percentDiff = 0;
 			// Update size
-			// Update display
-			BitcoinSlider.value = 1 - (w.Usd / netWorth);
-			UsdSlider.value= w.Usd / netWorth;
-			Vector3 scale = BitcoinSlider.transform.localPosition;
-			scale.x = 5F;
-			scale.y = 5f;
-			BitcoinSlider.transform.localScale = scale;}
+			scaleDiff = ScaleDiff();
+			Vector3 scale = Coin.transform.localScale;
+			scale.x = 5 * scaleDiff;
+			scale.y = 5 * scaleDiff;
+			Coin.transform.localScale = scale;
+		}
 		public float Price()
 		{
 			return btcHistory[counter];
@@ -90,23 +87,31 @@ namespace AssemblyCSharp
 		{
 			return w.Usd + (currentPrice * w.Btc);
 		}
-		public float PercentDiff()
+		public float ScaleDiff() // = log(|percentDiff| + 1)
 		{
 			float current = NetWorth();
 			float diff = current - 100; //initial value is 100, hardcoded
-			return (diff/100) * 100;	//same here
+			return Mathf.Log10(Mathf.Abs(diff) + 1);	//same here
 		}
 		
 		// Action functions
+		public void updateDisplay()
+		{
+			// Update display
+			BitcoinSlider.value = 1 - (w.Usd / netWorth);
+			MoneySlider.value= w.Usd / netWorth;
+		}
 		public void Buy(float percent) 
 		{
 			float amount = percent * netWorth / 100;
 			w.Buy(amount, currentPrice);
+			updateDisplay();
 		}
 		public void Sell(float percent) 
 		{
 			float amount = percent * netWorth / 100;
 			w.Sell(amount/currentPrice, currentPrice);
+			updateDisplay();
 		}
 	}
 	class PlottedData : IComparable
