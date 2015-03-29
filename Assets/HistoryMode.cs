@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using UnityEngine.UI;
-using UnityEngine;
+using Newtonsoft.Json.Linq;
 namespace AssemblyCSharp
 {
 	class HistoryMode
@@ -19,32 +18,46 @@ namespace AssemblyCSharp
 		int counter;
 		int totalCount;
 		float netWorth;
-		float scaleDiff;
-		public GameObject Coin = GameObject.Find("Coin");
-		public Slider BitcoinSlider = GameObject.Find("BitcoinSlider").GetComponent<Slider>();
-		public Slider MoneySlider= GameObject.Find("MoneySlider").GetComponent<Slider>();
+		float percentDiff;
+		
 		public HistoryMode()
 		{
-			List<PlottedData> tempList;
-			// Get JSON
-			using (var webClient = new System.Net.WebClient()) {
-				var json = webClient.DownloadString(
-					"https://blockchain.info/charts/market-price?showDataPoints=false&timespan=all&show_header=true&daysAverageString=1&scale=0&format=json&address=");
-				//Compilation on this version of .NET for my online compiler; should work in .NET 4.0+
-				tempList = JsonConvert.DeserializeObject<List<PlottedData>>(json);     
-			}
-			//Hardcoded for october 1, 2010.
-			tempList = (List<PlottedData>)getTimePrices("1285891200",(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds.ToString(), tempList);
-			totalCount = tempList.Count;
+            List<float> tempList = new List<float>();
+            /*// Get JSON
+            using (var webClient = new System.Net.WebClient())
+            {
+                webClient.Encoding = System.Text.Encoding.UTF8;
+                var json = webClient.DownloadString(
+                    "https://blockchain.info/charts/market-price?showDataPoints=false&timespan=all&show_header=true&daysAverageString=1&scale=0&format=json&address=");
+                //Compilation on this version of .NET for my online compiler; should work in .NET 4.0+
+                json = json.Replace("{\"values\" : ", "");
+                tempList = JsonConvert.DeserializeObject<List<PlottedData>>(json.Substring(0,json.Length - 1));
+            } */
+            // Get CSV
+            StreamReader sr = new StreamReader("market-price.txt");
+            while (!sr.EndOfStream)
+            {
+                string line = sr.ReadLine();
+                string[] pair = line.Split(',');
+                float f = float.Parse(pair[1], System.Globalization.CultureInfo.InvariantCulture);
+                if (pair[1] == "0.0")
+                    continue;
+                else
+                    tempList.Add(f);
+            }
+
+            totalCount = tempList.Count;
 			btcHistory = new float[totalCount];
 			for(int i = 0; i < totalCount; i++) {
-				btcHistory[i] = float.Parse(tempList[i].price);
+				btcHistory[i] = tempList[i];
 			}
 			counter = 0;
 			w = new GameWallet (100);
 			netWorth = 100;
-			scaleDiff = 0;
 			currentPrice = btcHistory [0];
+			percentDiff = 0;
+			
+			// Update display
 		}
 		
 		public IEnumerable<PlottedData> getTimePrices(String start, String end, List<PlottedData> history)
@@ -67,17 +80,32 @@ namespace AssemblyCSharp
 		}
 		
 		// Updating functions
+		public void showStats()
+		{
+		    while(counter <= totalCount) {
+    			Console.WriteLine("~~~Iteration~~~");
+                Console.WriteLine("Counter: " + counter);
+                Console.WriteLine("Price: " + currentPrice);
+                Console.WriteLine("Net worth: " + netWorth);
+                Console.WriteLine("USD: " + w.Usd);
+                Console.WriteLine("BTC: " + w.Btc);
+    			updateStats();
+                Console.ReadLine();
+		    }
+			// Update size
+			// Update display
+		}
+		// Updating functions
 		public void updateStats()
 		{
 			counter++;
+            if (counter >= btcHistory.Count())
+                return;
 			currentPrice = Price();
 			netWorth = NetWorth();
+			percentDiff = 0;
 			// Update size
-			scaleDiff = ScaleDiff();
-			Vector3 scale = Coin.transform.localScale;
-			scale.x = 5 * scaleDiff;
-			scale.y = 5 * scaleDiff;
-			Coin.transform.localScale = scale;
+			// Update display
 		}
 		public float Price()
 		{
@@ -87,31 +115,23 @@ namespace AssemblyCSharp
 		{
 			return w.Usd + (currentPrice * w.Btc);
 		}
-		public float ScaleDiff() // = log(|percentDiff| + 1)
+		public float PercentDiff()
 		{
 			float current = NetWorth();
 			float diff = current - 100; //initial value is 100, hardcoded
-			return Mathf.Log10(Mathf.Abs(diff) + 1);	//same here
+			return (diff/100) * 100;	//same here
 		}
 		
 		// Action functions
-		public void updateDisplay()
-		{
-			// Update display
-			BitcoinSlider.value = 1 - (w.Usd / netWorth);
-			MoneySlider.value= w.Usd / netWorth;
-		}
 		public void Buy(float percent) 
 		{
 			float amount = percent * netWorth / 100;
 			w.Buy(amount, currentPrice);
-			updateDisplay();
 		}
 		public void Sell(float percent) 
 		{
 			float amount = percent * netWorth / 100;
 			w.Sell(amount/currentPrice, currentPrice);
-			updateDisplay();
 		}
 	}
 	class PlottedData : IComparable
@@ -119,10 +139,10 @@ namespace AssemblyCSharp
 		public string time {get;set;}
 		public string price {get;set;}
 		
-		public PlottedData(string t, string p)
+		public PlottedData(string time, string price)
 		{
-			time = t;
-			price = p;
+			this.time = time;
+			this.price = price;
 		}
 		int IComparable.CompareTo(object other)
 		{
