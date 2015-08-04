@@ -1,4 +1,4 @@
-# Tea-Cheerios
+# CoinRider
 HackPSU 2015 Project
 
 Members:
